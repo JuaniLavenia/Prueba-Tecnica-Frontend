@@ -7,9 +7,11 @@ import Swal from "sweetalert2";
 
 function Home() {
   const [clientCode, setClientCode] = useState("");
+  const [movements, setMovements] = useState([]);
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [movements, setMovements] = useState([]);
+  const [filteredMovements, setFilteredMovements] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading1, setIsLoading1] = useState(false);
@@ -49,7 +51,10 @@ function Home() {
     setIsLoading(true);
     axios
       .get(`https://localhost:7129/api/CurrentAccount?clientData=${clientCode}`)
-      .then((res) => setMovements(res.data))
+      .then((res) => {
+        setMovements(res.data);
+        setFilteredMovements(res.data);
+      })
       .catch((error) => {
         Swal.fire({
           icon: "error",
@@ -102,6 +107,31 @@ function Home() {
       });
     }
   };
+
+  const handleFilterByDate = () => {
+    setIsLoading(true);
+    axios
+      .get(
+        `https://localhost:7129/api/CurrentAccount/GetByDateRange?startDate=${startDate}&endDate=${endDate}`
+      )
+      .then((res) => {
+        setFilteredMovements(res.data);
+      })
+      .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: "Conexión perdida",
+          text: "No se pudo establecer conexión con el servidor.",
+        });
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    setFilteredMovements(movements);
+  }, [movements, startDate, endDate]);
 
   // const handlePrintPDF = async () => {
   //   try {
@@ -160,6 +190,13 @@ function Home() {
               required
             />
           </div>
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isLoading}
+          >
+            {isLoading ? "Cargando..." : "Consultar"}
+          </button>
           <div className="mb-3">
             <label htmlFor="startDate" className="form-label">
               Fecha de inicio:
@@ -184,14 +221,17 @@ function Home() {
               onChange={handleEndDateChange}
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isLoading}
-          >
-            {isLoading ? "Cargando..." : "Consultar"}
-          </button>
+          <div className="text-center">
+            <button
+              className="btn btn-primary mt-3"
+              onClick={handleFilterByDate}
+              disabled={isLoading}
+            >
+              {isLoading ? "Cargando..." : "Filtrar por fecha"}
+            </button>
+          </div>
         </form>
+
         {/* <button
           className="btn btn-primary mt-3"
           onClick={handlePrintPDF}
@@ -261,14 +301,14 @@ function Home() {
               </tr>
             </thead>
             <tbody className="tbody">
-              {movements.length === 0 ? (
+              {filteredMovements.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="text-center text-light">
                     No hay registros
                   </td>
                 </tr>
               ) : (
-                movements.map((movement) => (
+                filteredMovements.map((movement) => (
                   <tr key={movement.idCA} className="file">
                     <td scope="row">{movement.dateReceipt}</td>
                     <td scope="row">{movement.numReceipt}</td>
