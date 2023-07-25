@@ -243,84 +243,81 @@ function Home() {
 
       <h3 className="text-center">DETALLE</h3>
 
+      <div className="tablaClientes">
+        <table className="table tableBody text-light">
+          <thead className="thead">
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Razon Social</th>
+              <th scope="col">CUIT</th>
+              <th scope="col">Posnet</th>
+            </tr>
+          </thead>
+          <tbody className="tbody">
+            {clients.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="text-center">
+                  No hay registros
+                </td>
+              </tr>
+            ) : (
+              clients.map((client) => (
+                <tr key={client.idClient}>
+                  <td scope="row">{client.idClient}</td>
+                  <td scope="row">{client.razonSocial}</td>
+                  <td scope="row">{client.cuit}</td>
+                  <td scope="row">{client.posnet ? "Si" : "No"}</td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+        <div className="text-center">
+          <button
+            className="btn btn-light"
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Anterior
+          </button>
+          <button
+            className="btn btn-light"
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
       <div className="tablaCuentas">
-        <div>
-          <table className="table tableBody text-light">
-            <thead className="thead">
+        <table className="table tableBody text-light">
+          <thead className="thead">
+            <tr>
+              <th scope="col">Fecha del Comprobante</th>
+              <th scope="col">Nro del Comprobante</th>
+              <th scope="col">Tipo de Comprobante</th>
+              <th scope="col">Tipo</th>
+              <th scope="col">Monto</th>
+            </tr>
+          </thead>
+          <tbody className="tbody">
+            {filteredMovements.length === 0 ? (
               <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Razon Social</th>
-                <th scope="col">CUIT</th>
-                <th scope="col">Posnet</th>
+                <td colSpan={5} className="text-center text-light">
+                  No hay registros
+                </td>
               </tr>
-            </thead>
-            <tbody className="tbody">
-              {clients.length === 0 ? (
-                <tr>
-                  <td colSpan={4} className="text-center">
-                    No hay registros
-                  </td>
+            ) : (
+              filteredMovements.map((movement) => (
+                <tr key={movement.idCA} className="file">
+                  <td scope="row">{movement.dateReceipt}</td>
+                  <td scope="row">{movement.numReceipt}</td>
+                  <td scope="row">{movement.receiptType}</td>
+                  <td scope="row">{movement.type}</td>
+                  <td scope="row">{movement.amount}</td>
                 </tr>
-              ) : (
-                clients.map((client) => (
-                  <tr key={client.idClient}>
-                    <td scope="row">{client.idClient}</td>
-                    <td scope="row">{client.razonSocial}</td>
-                    <td scope="row">{client.cuit}</td>
-                    <td scope="row">{client.posnet ? "Si" : "No"}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          <div className="text-center">
-            <button
-              className="btn btn-light"
-              onClick={() => handlePageChange(currentPage - 1)}
-            >
-              Anterior
-            </button>
-            <button
-              className="btn btn-light"
-              onClick={() => handlePageChange(currentPage + 1)}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <table className="table tableBody text-light">
-            <thead className="thead">
-              <tr>
-                <th scope="col">Fecha del Comprobante</th>
-                <th scope="col">Nro del Comprobante</th>
-                <th scope="col">Tipo de Comprobante</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Monto</th>
-              </tr>
-            </thead>
-            <tbody className="tbody">
-              {filteredMovements.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="text-center text-light">
-                    No hay registros
-                  </td>
-                </tr>
-              ) : (
-                filteredMovements.map((movement) => (
-                  <tr key={movement.idCA} className="file">
-                    <td scope="row">{movement.dateReceipt}</td>
-                    <td scope="row">{movement.numReceipt}</td>
-                    <td scope="row">{movement.receiptType}</td>
-                    <td scope="row">{movement.type}</td>
-                    <td scope="row">{movement.amount}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   );

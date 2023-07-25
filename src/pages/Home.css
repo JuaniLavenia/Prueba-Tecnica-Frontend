@@ -1,4 +1,5 @@
-.tablaCuentas {
+.tablaCuentas,
+.tablaClientes {
   background-color: #212121;
   color: white;
   min-height: 200px;
@@ -16,6 +17,7 @@
   padding: 20px;
   background-color: #212121;
   color: white;
+  min-width: 380px;
 }
 
 .form-label {
@@ -52,21 +54,26 @@
 }
 
 @media screen and (max-width: 480px) {
-  .tablaCuentas {
+  .tablaCuentas,
+  .tablaClientes {
     overflow-x: auto;
   }
-  .tablaCuentas table {
+  .tablaCuentas,
+  .tablaClientes table {
     width: 100%;
   }
-  .tablaCuentas thead {
+  /* .tablaCuentas,
+  .tablaClientes thead {
     display: none;
-  }
-  .tablaCuentas tbody tr {
+  } */
+  .tablaCuentas,
+  .tablaClientes tbody tr {
     border-bottom: 1px solid #ccc;
     margin-bottom: 1rem;
     width: 100%;
   }
-  .tablaCuentas tbody td {
+  .tablaCuentas,
+  .tablaClientes tbody td {
     display: block;
     text-align: center;
     font-size: 1rem;
@@ -82,9 +89,7 @@
   .tablaCuentas .tableBody th:nth-of-type(3),
   .tablaCuentas .tableBody td:nth-of-type(3),
   .tablaCuentas .tableBody th:nth-of-type(4),
-  .tablaCuentas .tableBody td:nth-of-type(4),
-  .tablaCuentas .tableBody th:nth-of-type(5),
-  .tablaCuentas .tableBody td:nth-of-type(5) {
+  .tablaCuentas .tableBody td:nth-of-type(4) {
     display: none;
   }
 }
@@ -96,10 +101,28 @@
     display: none;
   }
 }
-
 @media (max-width: 1018px) {
-  .tablaCuentas .tableBody th:nth-of-type(5),
-  .tablaCuentas .tableBody td:nth-of-type(5) {
+  .tablaCuentas .tableBody th:nth-of-type(3),
+  .tablaCuentas .tableBody td:nth-of-type(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .tablaClientes .tableBody th:nth-of-type(1),
+  .tablaClientes .tableBody td:nth-of-type(1),
+  .tablaClientes .tableBody th:nth-of-type(3),
+  .tablaClientes .tableBody td:nth-of-type(3),
+  .tablaClientes .tableBody th:nth-of-type(4),
+  .tablaClientes .tableBody td:nth-of-type(4),
+  .tablaClientes .tableBody th:nth-of-type(5),
+  .tablaClientes .tableBody td:nth-of-type(5) {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  .tablaClientes .tableBody th:nth-of-type(4),
+  .tablaClientes .tableBody td:nth-of-type(4) {
     display: none;
   }
 }

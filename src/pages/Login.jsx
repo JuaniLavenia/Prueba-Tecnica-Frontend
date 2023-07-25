@@ -82,7 +82,10 @@ function Login() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="username" className="form-label text-black">
+              <label
+                htmlFor="username"
+                className="form-label loginLabel text-black"
+              >
                 Usuario
               </label>
               <input
@@ -99,7 +102,7 @@ function Login() {
             <div className="mb-3">
               <label
                 htmlFor="registerPassword"
-                className="form-label text-black"
+                className="form-label loginLabel text-black"
               >
                 Contraseña
               </label>

@@ -1,91 +1,59 @@
-@import url("https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap");
-
-:root {
-  --color-l1: #fff004;
-  --color-l2: #00b3f5;
-  --color-bg: rgb(36, 35, 35);
-  --font-family: "Rubik", sans-serif;
-}
-
-* {
-  font-family: var(--font-family);
+.mainDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #212121;
+  color: black;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-width: 380px;
 }
 
 .login {
   background-color: white;
-  color: black;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 400px;
-  border-radius: 30px;
-}
-
-.mainDiv {
-  background-color: #212121;
-  height: 88.1vh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  padding-bottom: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.mainDiv::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
   width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: -1;
 }
 
-.divError {
-  display: none;
-  color: red;
+.login h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
-.form-label {
-  margin: 0.5rem;
-  border-radius: 20px;
-  padding: 0.5rem;
-}
+.loginLabel,
 .loginInput {
-  padding: 1rem;
-  height: 40px;
-  width: 510px;
-  margin: 0.5rem;
-  border-radius: 20px;
-  padding: 0.5rem;
+  width: 100%;
 }
 
-.btn-inicio-sesion {
-  background: var(--color-l2);
-  color: white;
-}
-
-.btn-contrasena {
-  color: white;
-  text-decoration: none;
-}
-
-.btn-registrarse {
-  background: var(--color-l1);
-  color: black;
+.loginInput {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .btnsDiv {
   display: flex;
   justify-content: center;
+  margin-top: 20px;
 }
 
-@media (max-width: 991px) {
+.btn-inicio-sesion {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 768px) {
   .login {
-    width: 530px;
+    max-width: 80%;
   }
 }
