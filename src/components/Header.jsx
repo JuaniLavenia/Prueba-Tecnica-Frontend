@@ -1,9 +1,10 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import "./Header.css";
 
 function Header() {
-  const { token, logout, userId } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -18,8 +19,8 @@ function Header() {
   };
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-dark">
-        <div className="container-fluid">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark containPrincipal">
+        <div className="container-fluid ">
           <Link className="navbar-brand text-light" to="/">
             Trocadero Distribuidora
           </Link>
@@ -39,7 +40,7 @@ function Header() {
               <li className="nav-item" id="login-register">
                 {token ? (
                   <Link
-                    className="nav-link text-light"
+                    className="nav-link text-light logoutBtn"
                     to="/"
                     onClick={handleLogout}
                   >
@@ -71,7 +72,7 @@ function Header() {
                     Cerrar Sesión
                   </Link>
                 ) : (
-                  <Link className="nav-link text-light" to="/login">
+                  <Link className="nav-link text-light loginBtn" to="/login">
                     <svg
                       className="bi d-block mx-auto mb-1"
                       width="30px"

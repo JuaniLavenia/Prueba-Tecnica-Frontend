@@ -1,0 +1,7 @@
+.containPrincipal {
+  min-width: 380px;
+}
+.loginBtn,
+.logoutBtn {
+  text-align: center;
+}
