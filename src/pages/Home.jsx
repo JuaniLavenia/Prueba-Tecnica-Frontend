@@ -10,8 +10,14 @@ function Home() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [movements, setMovements] = useState([]);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading1, setIsLoading1] = useState(false);
+
   const [clients, setClients] = useState([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(5);
 
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
@@ -32,12 +38,10 @@ function Home() {
 
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
-    filterMovementsByDate(event.target.value, endDate);
   };
 
   const handleEndDateChange = (event) => {
     setEndDate(event.target.value);
-    filterMovementsByDate(startDate, event.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -58,13 +62,17 @@ function Home() {
       });
   };
 
-  const handleShowAllClients = () => {
-    setIsLoading(true);
-    axios
-      .get("https://localhost:7129/api/Clients")
+  const handleShowAllClients = async () => {
+    setIsLoading1(true);
+    const page = currentPage || 1;
+    await axios
+      .get(
+        `https://localhost:7129/api/Clients?page=${page}&limit=${postsPerPage}`
+      )
       .then((res) => {
-        setClients(res.data);
-        setIsLoading(false);
+        setClients(res.data.items);
+        setCurrentPage(res.data.currentPage);
+        setIsLoading1(false);
       })
       .catch((error) => {
         Swal.fire({
@@ -72,16 +80,58 @@ function Home() {
           title: "Conexión perdida",
           text: "No se pudo establecer conexión con el servidor.",
         });
-        setIsLoading(false);
+      })
+      .finally(() => {
+        setIsLoading1(false);
       });
   };
 
-  const filterMovementsByDate = (start, end) => {
-    const filteredMovements = movements.filter(
-      (movement) => movement.dateReceipt >= start && movement.dateReceipt <= end
-    );
-    setMovements(filteredMovements);
+  const handlePageChange = async (newPage) => {
+    if (newPage <= 0) return;
+    try {
+      const response = await axios.get(
+        `https://localhost:7129/api/Clients?page=${newPage}&limit=${postsPerPage}`
+      );
+      setClients(response.data.items);
+      setCurrentPage(response.data.currentPage);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Conexión perdida",
+        text: "No se pudo establecer conexión con el servidor.",
+      });
+    }
   };
+
+  // const handlePrintPDF = async () => {
+  //   try {
+  //     const payload = movements;
+  //     const response = await axios.post(
+  //       "https://localhost:7129/api/CurrentAccount",
+  //       JSON.stringify(payload),
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     const data = response.data;
+  //     Swal.fire({
+  //       position: "center",
+  //       icon: "success",
+  //       title: "PDF generado correctamente",
+  //       showConfirmButton: false,
+  //       timer: 1500,
+  //     });
+  //   } catch (error) {
+  //     Swal.fire({
+  //       icon: "error",
+  //       title: "Error",
+  //       text: "Algo salió mal :(",
+  //     });
+  //   }
+  // };
 
   return (
     <div className="containerMain">
@@ -89,8 +139,12 @@ function Home() {
         <h1 className="text-center">
           Consulta de Movimientos de Cuenta Corriente
         </h1>
-        <button className="btn btn-primary mt-3" onClick={handleShowAllClients}>
-          Mostrar todos los clientes
+        <button
+          className="btn btn-primary mt-3"
+          onClick={handleShowAllClients}
+          disabled={isLoading1}
+        >
+          {isLoading1 ? "Cargando..." : "Mostrar todos los clientes"}
         </button>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
@@ -130,16 +184,27 @@ function Home() {
               onChange={handleEndDateChange}
             />
           </div>
-          <button type="submit" className="btn btn-primary">
-            Consultar
+          <button
+            type="submit"
+            className="btn btn-primary"
+            disabled={isLoading}
+          >
+            {isLoading ? "Cargando..." : "Consultar"}
           </button>
         </form>
+        {/* <button
+          className="btn btn-primary mt-3"
+          onClick={handlePrintPDF}
+          disabled={isLoading2}
+        >
+          {isLoading2 ? "Cargando..." : "Generar reporte de la tabla"}
+        </button> */}
       </div>
 
       <h3 className="text-center">DETALLE</h3>
 
       <div className="tablaCuentas">
-        {clients.length > 0 && (
+        <div>
           <table className="table tableBody text-light">
             <thead className="thead">
               <tr>
@@ -150,8 +215,12 @@ function Home() {
               </tr>
             </thead>
             <tbody className="tbody">
-              {isLoading ? (
-                <p className="text-center">Cargando clientes...</p>
+              {clients.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="text-center">
+                    No hay registros
+                  </td>
+                </tr>
               ) : (
                 clients.map((client) => (
                   <tr key={client.idClient}>
@@ -164,8 +233,23 @@ function Home() {
               )}
             </tbody>
           </table>
-        )}
-        {movements.length > 0 && (
+          <div className="text-center">
+            <button
+              className="btn btn-light"
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              Anterior
+            </button>
+            <button
+              className="btn btn-light"
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+
+        <div>
           <table className="table tableBody text-light">
             <thead className="thead">
               <tr>
@@ -177,8 +261,12 @@ function Home() {
               </tr>
             </thead>
             <tbody className="tbody">
-              {isLoading ? (
-                <p className="text-center">Cargando detalles...</p>
+              {movements.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="text-center text-light">
+                    No hay registros
+                  </td>
+                </tr>
               ) : (
                 movements.map((movement) => (
                   <tr key={movement.idCA} className="file">
@@ -192,7 +280,7 @@ function Home() {
               )}
             </tbody>
           </table>
-        )}
+        </div>
       </div>
     </div>
   );
