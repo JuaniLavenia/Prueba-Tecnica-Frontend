@@ -24,15 +24,15 @@ function Home() {
   const navigate = useNavigate();
   const { token } = useContext(AuthContext);
 
-  // useEffect(() => {
-  //   if (!token) {
-  //     navigate("/login");
-  //   }
-  // }, [token]);
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token]);
 
-  // if (!token) {
-  //   return null;
-  // }
+  if (!token) {
+    return null;
+  }
 
   const handleClientCodeChange = (event) => {
     setClientCode(event.target.value);
