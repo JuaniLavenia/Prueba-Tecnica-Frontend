@@ -15,6 +15,7 @@ function Home() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading1, setIsLoading1] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
 
   const [clients, setClients] = useState([]);
 
@@ -133,35 +134,53 @@ function Home() {
     setFilteredMovements(movements);
   }, [movements, startDate, endDate]);
 
-  // const handlePrintPDF = async () => {
-  //   try {
-  //     const payload = movements;
-  //     const response = await axios.post(
-  //       "https://localhost:7129/api/CurrentAccount",
-  //       JSON.stringify(payload),
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
+  const handlePrintPDF = async () => {
+    setIsLoading2(true);
+    try {
+      const payload = movements.length === 0 ? filteredMovements : movements;
 
-  //     const data = response.data;
-  //     Swal.fire({
-  //       position: "center",
-  //       icon: "success",
-  //       title: "PDF generado correctamente",
-  //       showConfirmButton: false,
-  //       timer: 1500,
-  //     });
-  //   } catch (error) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Error",
-  //       text: "Algo salió mal :(",
-  //     });
-  //   }
-  // };
+      const response = await axios.post(
+        "https://localhost:7129/api/CurrentAccount",
+        JSON.stringify(payload),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "reportedetabla.pdf";
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      Swal.fire({
+        position: "center",
+        icon: "success",
+        title: "PDF generado correctamente",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Algo salió mal :(",
+      });
+    } finally {
+      setIsLoading2(false);
+    }
+  };
 
   return (
     <div className="containerMain">
@@ -232,13 +251,13 @@ function Home() {
           </div>
         </form>
 
-        {/* <button
+        <button
           className="btn btn-primary mt-3"
           onClick={handlePrintPDF}
           disabled={isLoading2}
         >
           {isLoading2 ? "Cargando..." : "Generar reporte de la tabla"}
-        </button> */}
+        </button>
       </div>
 
       <h3 className="text-center">DETALLE</h3>
