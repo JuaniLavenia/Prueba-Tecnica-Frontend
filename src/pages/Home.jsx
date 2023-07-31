@@ -16,6 +16,7 @@ function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoading1, setIsLoading1] = useState(false);
   const [isLoading2, setIsLoading2] = useState(false);
+  const [isLoading3, setIsLoading3] = useState(false);
 
   const [clients, setClients] = useState([]);
 
@@ -110,7 +111,7 @@ function Home() {
   };
 
   const handleFilterByDate = () => {
-    setIsLoading(true);
+    setIsLoading3(true);
     axios
       .get(
         `https://localhost:7129/api/CurrentAccount/GetByDateRange?startDate=${startDate}&endDate=${endDate}`
@@ -126,7 +127,7 @@ function Home() {
         });
       })
       .finally(() => {
-        setIsLoading(false);
+        setIsLoading3(false);
       });
   };
 
@@ -182,19 +183,27 @@ function Home() {
     }
   };
 
+  const handleCleanTable = () => {
+    setMovements([]);
+    setFilteredMovements([]);
+  };
+
   return (
     <div className="containerMain">
       <div className="containerForm">
         <h1 className="text-center">
           Consulta de Movimientos de Cuenta Corriente
         </h1>
-        <button
-          className="btn btn-primary mt-3"
-          onClick={handleShowAllClients}
-          disabled={isLoading1}
-        >
-          {isLoading1 ? "Cargando..." : "Mostrar todos los clientes"}
-        </button>
+        <div className="d-grid gap-2 col-6 mx-auto">
+          <button
+            className="btn btn-primary mt-3 mb-3"
+            onClick={handleShowAllClients}
+            disabled={isLoading1}
+          >
+            {isLoading1 ? "Cargando..." : "Mostrar todos los clientes"}
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="clientCode" className="form-label">
@@ -209,13 +218,16 @@ function Home() {
               required
             />
           </div>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={isLoading}
-          >
-            {isLoading ? "Cargando..." : "Consultar"}
-          </button>
+          <div className="mb-3">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isLoading}
+            >
+              {isLoading ? "Cargando..." : "Consultar"}
+            </button>
+          </div>
+
           <div className="mb-3">
             <label htmlFor="startDate" className="form-label">
               Fecha de inicio:
@@ -240,24 +252,29 @@ function Home() {
               onChange={handleEndDateChange}
             />
           </div>
-          <div className="text-center">
+          <div>
             <button
               className="btn btn-primary mt-3"
               onClick={handleFilterByDate}
-              disabled={isLoading}
+              disabled={isLoading3}
             >
-              {isLoading ? "Cargando..." : "Filtrar por fecha"}
+              {isLoading3 ? "Cargando..." : "Filtrar por fecha"}
             </button>
           </div>
         </form>
 
-        <button
-          className="btn btn-primary mt-3"
-          onClick={handlePrintPDF}
-          disabled={isLoading2}
-        >
-          {isLoading2 ? "Cargando..." : "Generar reporte de la tabla"}
-        </button>
+        <div className="d-grid gap-2 col-6 mx-auto">
+          <button
+            className="btn btn-primary mt-3"
+            onClick={handlePrintPDF}
+            disabled={isLoading2}
+          >
+            {isLoading2 ? "Cargando..." : "Generar reporte de la tabla"}
+          </button>
+          <button className="btn btn-primary mt-3" onClick={handleCleanTable}>
+            Limpiar tabla
+          </button>
+        </div>
       </div>
 
       <h3 className="text-center">DETALLE</h3>
