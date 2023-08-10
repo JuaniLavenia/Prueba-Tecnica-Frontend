@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
+import Swal from "sweetalert2";
 import "./Header.css";
 
 function Header() {
